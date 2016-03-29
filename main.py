@@ -5,7 +5,13 @@ from sendmail import *
 
 def main():
 
-    sendmail = SendMail()
+    from_mail = 'logexecution@gmail.com'
+    password = 'nossasenhaeessa'
+    to = 'luisguilherme.ufpi@gmail.com'
+    #info_execution = 'execucao 1'
+    info_execution = ''
+
+    sendmail = SendMail(from_mail, password, to, info_execution)
 
     # Envia email
     sendmail.send()
