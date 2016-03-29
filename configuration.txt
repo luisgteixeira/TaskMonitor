@@ -1,7 +1,7 @@
-mail_from='logexecution@gmail.com'
-senha='nossasenhaeessa'
-mail_to=['luisguilherme.ufpi@gmail.com']
-log_path=''
+mail_from=logexecution@gmail.com
+senha=nossasenhaeessa
+mail_to=luisguilherme.ufpi@gmail.com,netoaraujjo@gmail.com
+log_path=
 notification_time=1
-execution_info='execucao 1'
-execution_info_largest=''
+execution_info=execucao 1
+execution_info_largest=Esse eh um dos testes do Task Monitor
