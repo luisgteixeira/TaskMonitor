@@ -6,21 +6,29 @@
 
 import smtplib
 
-class SendMail:
+class SendMail(object):
+
+    def __init__(self, mail_from, password, mail_to, execution_info):
+        self.mail_from = mail_from
+        self.password = password
+        self.mail_to = mail_to
+        # Existe algo na string
+        if execution_info:
+            self.execution_info = ' (' + execution_info + ')'
+        else:
+            self.execution_info = execution_info
 
     def send(self):
         smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 
-        smtp.login('logexecution@gmail.com', 'nossasenhaeessa')
+        smtp.login(self.mail_from, self.password)
 
-        de = 'logexecution@gmail.com'
-        para = ['luisguilherme.ufpi@gmail.com']
-        msg = """From: %s
-        To: %s
-        Subject: Log de Execucao
+        self.mail_from = 'Informação de Log<' + self.mail_from + '>'
 
-        Email de teste do Log de Execucao.""" % (de, ', '.join(para))
+        self.msg = """From: %s\nTo: %s\nSubject: Log de Execucao%s
 
-        smtp.sendmail(de, para, msg)
+        Email de teste do Log de Execucao.""" % (self.mail_from, ', '.join(self.mail_to), self.execution_info)
+
+        smtp.sendmail(self.mail_from, self.mail_to, self.msg)
 
         smtp.quit()
