@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import time
+from time import sleep
 from sendmail import *
+from logmonitor import *
 
 def main():
 
@@ -19,15 +20,22 @@ def main():
     notification_time = 1
     '''
 
+    logmonitor = LogMonitor("log.txt")
+
     while running > 0:
+
+        print(logmonitor.get_message())
+
+        notification_time = 60
+
         # Cria email a ser enviado
-        sendmail = SendMail(mail_from, password, mail_to, execution_info)
+        # sendmail = SendMail(mail_from, password, mail_to, execution_info)
 
         # Envia email
-        sendmail.send()
+        # sendmail.send()
 
         # Tempo entre o envio dos emails
-        time.sleep(notification_time * 60)
+        sleep(notification_time)
         running -= 1
 
 if __name__ == '__main__':
