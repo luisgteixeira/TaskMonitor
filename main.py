@@ -26,7 +26,7 @@ def main():
     # Informacao maior sobre a execucao (vai no texto)
     execution_info_largest = configuration_loader.get_configuration("execution_info_largest")
 
-    logmonitor = LogMonitor("log.txt")
+    logmonitor = LogMonitor(log_path)
 
     initial_msg = "Execucao iniciada."
     sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, initial_msg)
