@@ -34,16 +34,11 @@ def main():
 
     while running > 0:
 
-        print(logmonitor.get_message())
-
-        notification_time = 60
-
         # Cria email a ser enviado
-        # sendmail = SendMail(mail_from, password, mail_to, execution_info)
-        #sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest)
+        sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, logmonitor.get_message())
 
-        # Envia email
-        # sendmail.send()
+        # Envia
+        sendmail.send()
 
         # Tempo entre o envio dos emails
         sleep(notification_time)

@@ -1,5 +1,5 @@
 mail_from=logexecution@gmail.com
-senha=nossasenhaeessa
+password=nossasenhaeessa
 mail_to=luisguilherme.ufpi@gmail.com,netoaraujjo@gmail.com
 log_path=
 notification_time=1

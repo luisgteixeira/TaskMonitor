@@ -13,7 +13,7 @@ class ConfigurationLoader(object):
         configuration_file = open('configuration.txt')
         # Le as configuracoes em cada linha (key=value)
         for line in configuration_file:
-            info = line.split('=').replace('\n','')
+            info = line.replace('\n','').split('=')
             # info[0] -> chave, info[1] = valor
             self.configurations[info[0]] = info[1]
         # Fecha o arquivo de configuracoes
