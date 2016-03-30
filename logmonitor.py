@@ -16,6 +16,7 @@ class LogMonitor(object):
 
 
     def get_message(self):
+        """"""
         modified = self.__modification_checker()
         if modified:
             # Obtem modificacoes do arquivo de log
