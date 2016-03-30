@@ -1,1 +1,2 @@
-Inserida primeira linha do log.
+linha
+end

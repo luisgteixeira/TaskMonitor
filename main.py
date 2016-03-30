@@ -21,28 +21,46 @@ def main():
     log_path = configuration_loader.get_configuration("log_path")
     # Tempo de execucao em minutos
     notification_time = int(configuration_loader.get_configuration("notification_time"))
-    notification_time *= 60
     # Informacao sobre a execucao (vai no assunto)
     execution_info = configuration_loader.get_configuration("execution_info")
     # Informacao maior sobre a execucao (vai no texto)
     execution_info_largest = configuration_loader.get_configuration("execution_info_largest")
 
-    # Serve para repetir o envio dos email (temporario)
-    running = 3
-
     logmonitor = LogMonitor("log.txt")
 
-    while running > 0:
+    initial_msg = "Execucao iniciada."
+    sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, initial_msg)
+    sendmail.send()
 
+    print("Execucao iniciada.")
+
+    while True:
+
+        for n in range(1, notification_time):
+            sleep(60)
+            print("Obtendo mensagem.")
+            msg = logmonitor.get_message()
+            print("Verificando finalizacao.")
+            if logmonitor.is_finished():
+                print("Execucao finalizada")
+                print("Enviando notificacao de termino.")
+                sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
+                sendmail.send()
+                print("Finalizando execucao.")
+                exit(0)
+            else:
+                print("Nao finalizado.")
+
+        sleep(60)
+
+        print("Enviando notificacao de andamento")
         # Cria email a ser enviado
-        sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, logmonitor.get_message())
+        msg = logmonitor.get_message(True)
+        print(msg)
+        sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
 
         # Envia
         sendmail.send()
-
-        # Tempo entre o envio dos emails
-        sleep(notification_time)
-        running -= 1
 
 if __name__ == '__main__':
     main()
