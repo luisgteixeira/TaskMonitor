@@ -10,15 +10,15 @@ class LogMonitor(object):
     def __init__(self, log_path):
         """Construtor da classe LogMonitor"""
         super(LogMonitor, self).__init__()
-        self.log_path = log_path        # Caminho do arquivo de log
-        self.last_update_time = time()  # Inicializa tempo
-        self.log_read_lines = 0
+        self.log_path = log_path                        # Caminho do arquivo de log
+        self.last_update_time = time() # Inicializa tempo
+        self.log_readed_lines = 0                       # Numero de linhas do log ja enviadas
         self.finished = False
 
 
     def get_message(self, to_send=False):
         """"""
-        modified = self.__modification_checker()
+        modified = self.__modification_checker(to_send)
         if modified:
             # Obtem modificacoes do arquivo de log
             self.message = self.__get_log_info(to_send)
@@ -30,7 +30,7 @@ class LogMonitor(object):
         return self.message
 
 
-    def __modification_checker(self):
+    def __modification_checker(self, to_send):
         """Verifica se o arquivo de log foi modificado."""
 
         # Obtem o tempo da ultima modificacao no arquivo de log
@@ -38,7 +38,8 @@ class LogMonitor(object):
 
         # Verifica se o arquivo foi modificado desde a ultima verificacao
         if last_modified_time > self.last_update_time:
-            self.last_update_time = last_modified_time
+            if to_send:
+                self.last_update_time = last_modified_time
             return True
         else:
             return False
@@ -51,10 +52,10 @@ class LogMonitor(object):
         print("Log:", log)
         log_file.close()
 
-        log = log[self.log_read_lines:]  # obtem apenas as linhas que ainda nao foram lidas
+        log = log[self.log_readed_lines:]  # obtem apenas as linhas que ainda nao foram lidas
 
         if to_send:
-            self.log_read_lines += len(log)  # atualiza o numero de linhas lidas
+            self.log_readed_lines += len(log)  # atualiza o numero de linhas lidas
 
         log_info = ""
 
@@ -67,18 +68,14 @@ class LogMonitor(object):
     def __finish_checker(self):
         """"""
         msg = self.message             # Copia a mensagem
-        print("mensagem inicial", msg)
         msg = msg.split("\n")          # Separa por linha
         last_line = msg[len(msg) - 1]  # Pega a ultima linha da mensagem
-        print("Mensagem splitada", msg)
         if not last_line:
             last_line = msg[len(msg) - 2]
-        print("Ultima linha", last_line)
         if last_line.upper() == "END":
             self.finished = True
             msg[len(msg) - 1] = "\nExecucao finalizada!"
             self.message = "\n".join(msg)
-
 
 
     def is_finished(self):

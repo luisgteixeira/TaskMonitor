@@ -7,7 +7,9 @@ from logmonitor import *
 from configuration_loader import *
 
 def main():
+    print("Monitoramento iniciado.")
 
+    print("Lendo configuracoes.")
     configuration_loader = ConfigurationLoader()
     configuration_loader.load_configurations()
 
@@ -25,33 +27,47 @@ def main():
     execution_info = configuration_loader.get_configuration("execution_info")
     # Informacao maior sobre a execucao (vai no texto)
     execution_info_largest = configuration_loader.get_configuration("execution_info_largest")
+    print("Configuracoes lidas.")
 
     logmonitor = LogMonitor(log_path)
 
+    print("Enviando notificacao inicial.")
     initial_msg = "Execucao iniciada."
     sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, initial_msg)
     sendmail.send()
+    print("Notificacao inicial enviada.")
 
-    print("Execucao iniciada.")
+    minuto = 0
 
     while True:
 
         for n in range(1, notification_time):
             sleep(60)
+
+            minuto += 1
+            print("===========================================================")
+            print("Minuto:", minuto)
+
             print("Obtendo mensagem.")
             msg = logmonitor.get_message()
-            print("Verificando finalizacao.")
+            print("Verificando finalizacao da execucao.")
+
             if logmonitor.is_finished():
-                print("Execucao finalizada")
+                print("Execucao finalizada.")
                 print("Enviando notificacao de termino.")
                 sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
                 sendmail.send()
-                print("Finalizando execucao.")
+                print("Notificacao de termino enviada.")
+                print("Finalizando monitoramento.")
                 exit(0)
             else:
-                print("Nao finalizado.")
+                print("Execucao nao finalizada.")
 
         sleep(60)
+
+        minuto += 1
+        print("===========================================================")
+        print("Minuto:", minuto)
 
         print("Enviando notificacao de andamento")
         # Cria email a ser enviado
@@ -61,6 +77,7 @@ def main():
 
         # Envia
         sendmail.send()
+        print("Notificacao de andamento enviada.")
 
 if __name__ == '__main__':
     main()
