@@ -10,23 +10,25 @@ class LogMonitor(object):
     def __init__(self, log_path):
         """Construtor da classe LogMonitor"""
         super(LogMonitor, self).__init__()
-        self.log_path = log_path                        # Caminho do arquivo de log
-        self.last_update_time = time() # Inicializa tempo
-        self.log_readed_lines = 0                       # Numero de linhas do log ja enviadas
-        self.finished = False
+        self.log_path = log_path          # Caminho do arquivo de log
+        self.last_update_time = time()    # Inicializa tempo
+        self.log_readed_lines = 0         # Numero de linhas do log ja enviadas
+        self.finished = False             # Inicializa flag de finalizacao
 
 
     def get_message(self, to_send=False):
         """"""
+        # Verifica se o arquivo de log foi modificado
         modified = self.__modification_checker(to_send)
         if modified:
             # Obtem modificacoes do arquivo de log
             self.message = self.__get_log_info(to_send)
-            self.__finish_checker()
+            self.__finish_checker() # Verifica se a execucao finalizou
         else:
             # deve ser enviada uma msg padrao
             self.message = "Ainda em execucao. Nao houve alteracoes desde a ultima verificacao."
 
+        # Retorna a mensagem
         return self.message
 
 
@@ -47,26 +49,28 @@ class LogMonitor(object):
 
     def __get_log_info(self, to_send):
         """Obtem as modificacoes do log"""
-        log_file = open(self.log_path)
+        log_file = open(self.log_path)   # Abre o arquivo de log
         log = log_file.readlines()       # obtem as linhas do log em uma lista
-        print("Log:", log)
-        log_file.close()
+        log_file.close()                 # Fecha o arquivo de log
 
-        log = log[self.log_readed_lines:]  # obtem apenas as linhas que ainda nao foram lidas
+        # obtem apenas as linhas que ainda nao foram lidas
+        log = log[self.log_readed_lines:]
 
+        # Apenas caso a mensagem deva ser enviada
         if to_send:
             self.log_readed_lines += len(log)  # atualiza o numero de linhas lidas
 
+        # Monta a mensagem com as novas informacoes do log
         log_info = ""
-
         for line in log:
             log_info += line
 
+        # Retorna a mensagem
         return log_info
 
 
     def __finish_checker(self):
-        """"""
+        """Verifica se a execucao finalizou."""
         msg = self.message             # Copia a mensagem
         msg = msg.split("\n")          # Separa por linha
         last_line = msg[len(msg) - 1]  # Pega a ultima linha da mensagem
