@@ -21,16 +21,23 @@ class SendMail(object):
 
         self.execution_info_largest = execution_info_largest
         self.message = message
+        self.missing_send = False
 
     def send(self):
-        smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        try:
+            smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 
-        smtp.login(self.mail_from, self.password)
+            smtp.login(self.mail_from, self.password)
 
-        self.mail_from = 'Informacao de Log<' + self.mail_from + '>'
+            self.mail_from = 'Informacao de Log<' + self.mail_from + '>'
 
-        self.msg = """From: %s\nTo: %s\nSubject: Log de Execucao%s\n%s\n\n%s""" % (self.mail_from, ', '.join(self.mail_to), self.execution_info, self.execution_info_largest, self.message)
+            self.msg = """From: %s\nTo: %s\nSubject: Log de Execucao%s\n%s\n\n%s""" % (self.mail_from, ', '.join(self.mail_to), self.execution_info, self.execution_info_largest, self.message)
 
-        smtp.sendmail(self.mail_from, self.mail_to, self.msg)
+            smtp.sendmail(self.mail_from, self.mail_to, self.msg)
 
-        smtp.quit()
+            smtp.quit()
+
+            self.missing_send = False
+        except smtplib.socket.error:
+            print("Nao foi possivel enviar o email. Tentaremos daqui a 1 minuto!")
+            self.missing_send = True
