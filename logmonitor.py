@@ -16,16 +16,25 @@ class LogMonitor(object):
         self.finished = False
 
 
-    def get_message(self, to_send=False):
+    def get_message(self, missing_send, to_send=False):
         """"""
         modified = self.__modification_checker(to_send)
-        if modified:
-            # Obtem modificacoes do arquivo de log
-            self.message = self.__get_log_info(to_send)
-            self.__finish_checker()
-        else:
-            # deve ser enviada uma msg padrao
-            self.message = "Ainda em execucao. Nao houve alteracoes desde a ultima verificacao."
+
+        # Caso a mensagem anterior tenha sido enviada, nao sera concatenada a nova
+        if not missing_send:
+            self.message = ""
+
+        # Caso ja tenha finalizado, nao necessita testar novamente
+        if not self.is_finished():
+            if modified:
+                # Obtem modificacoes do arquivo de log
+                self.message += self.__get_log_info(to_send)
+                self.__finish_checker()
+            else:
+                # Caso a mensagem anterior nao tenha sido enviada, nao sera necessario concatenar a essa mensagem
+                if not missing_send:
+                    # deve ser enviada uma msg padrao
+                    self.message = "Ainda em execucao. Nao houve alteracoes desde a ultima verificacao."
 
         return self.message
 

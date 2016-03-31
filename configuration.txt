@@ -1,7 +1,0 @@
-mail_from=logexecution@gmail.com
-password=nossasenhaeessa
-mail_to=luisguilherme.ufpi@gmail.com,netoaraujjo@gmail.com
-log_path=/home/neto/development/TaskMonitor/log.txt
-notification_time=2
-execution_info=execucao 1
-execution_info_largest=Esse eh um dos testes do Task Monitor
