@@ -15,5 +15,5 @@ log_path=filePath<br>
 notification_time=2 # Time in minutes<br>
 execution_info=EmailSubjectInfo<br>
 execution_info_largest=TextInfo<br>
-<code>
+</code>
 </pre>
