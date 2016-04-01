@@ -76,6 +76,7 @@ def main():
 
         print("Enviando notificacao de andamento")
         # Cria email a ser enviado
+
         msg = logmonitor.get_message(sendmail.missing_send, True)
         print(msg)
         #sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
