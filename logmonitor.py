@@ -14,6 +14,7 @@ class LogMonitor(object):
         self.last_update_time = time() # Inicializa tempo
         self.log_readed_lines = 0                       # Numero de linhas do log ja enviadas
         self.finished = False
+        self.message = ""
 
 
     def get_message(self, missing_send, to_send=False):

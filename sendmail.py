@@ -27,7 +27,11 @@ class SendMail(object):
         try:
             smtp = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 
-            smtp.login(self.mail_from, self.password)
+            try:
+                smtp.login(self.mail_from, self.password)
+            except smtplib.SMTPAuthenticationError:
+                print("Login/Senha incorreto(s)!")
+                exit(0)
 
             self.mail_from = 'Informacao de Log<' + self.mail_from + '>'
 

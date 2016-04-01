@@ -35,7 +35,9 @@ def main():
     initial_msg = "Execucao iniciada."
     sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, initial_msg)
     sendmail.send()
-    print("Notificacao inicial enviada.")
+    # So mostra a mensagem quando o email tiver sido enviado
+    if not sendmail.missing_send:
+        print("Notificacao inicial enviada.")
 
     minuto = 0
 
@@ -55,14 +57,14 @@ def main():
             if logmonitor.is_finished():
                 print("Execucao finalizada.")
                 print("Enviando notificacao de termino.")
-                sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
+                #sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
+                sendmail.__init__(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
                 sendmail.send()
                 # So encerra quando a ultima messagem tiver sido enviada
                 if not sendmail.missing_send:
                     print("Notificacao de termino enviada.")
                     print("Finalizando monitoramento.")
                     exit(0)
-                print("Ainda nao foi possivel finalizar o monitoramento. Tentaremos daqui a 1 minuto!")
             else:
                 print("Execucao nao finalizada.")
 
@@ -76,7 +78,8 @@ def main():
         # Cria email a ser enviado
         msg = logmonitor.get_message(sendmail.missing_send, True)
         print(msg)
-        sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
+        #sendmail = SendMail(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
+        sendmail.__init__(mail_from, password, mail_to, execution_info, execution_info_largest, msg)
 
         # Envia
         sendmail.send()

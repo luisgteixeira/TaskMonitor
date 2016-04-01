@@ -61,5 +61,6 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
-#Configuration File
+#Auxiliary Files
 configuration.txt
+log.txt
