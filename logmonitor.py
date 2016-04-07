@@ -5,10 +5,10 @@ from os.path import *
 from time import time
 
 class LogMonitor(object):
-    """docstring for LogMonitor"""
+    """Classe LogMonitor. Monitora o arquivo de log."""
 
     def __init__(self, log_path):
-        """Construtor da classe LogMonitor"""
+        """Construtor da classe LogMonitor."""
         super(LogMonitor, self).__init__()
         self.log_path = log_path          # Caminho do arquivo de log
         self.last_update_time = time()    # Inicializa tempo
@@ -18,7 +18,11 @@ class LogMonitor(object):
 
 
     def get_message(self, missing_send, to_send=False):
-        """"""
+        """
+        Obtem a mensagem a ser enviada na notificacao. Recebe um valor booleano
+        indicando se ha alguma mensagem nao enviada e um segundo valor indicando
+        se a mensagem sera enviada.
+        """
         # Verifica se o arquivo de log foi modificado
         modified = self.__modification_checker(to_send)
 
@@ -31,6 +35,7 @@ class LogMonitor(object):
             if modified:
                 # Obtem modificacoes do arquivo de log
                 self.message += self.__get_log_info(to_send)
+                # Verifica se a execucao finalizou
                 self.__finish_checker()
             else:
                 # Caso a mensagem anterior nao tenha sido enviada, nao sera necessario concatenar a essa mensagem
@@ -58,25 +63,34 @@ class LogMonitor(object):
 
 
     def __get_log_info(self, to_send):
-        """Obtem as modificacoes do log"""
-        log_file = open(self.log_path)   # Abre o arquivo de log
-        log = log_file.readlines()       # obtem as linhas do log em uma lista
-        log_file.close()                 # Fecha o arquivo de log
+        """Obtem as modificacoes do log."""
 
-        # obtem apenas as linhas que ainda nao foram lidas
-        log = log[self.log_readed_lines:]
+        try:
+            log_file = open(self.log_path)   # Abre o arquivo de log
+            log = log_file.readlines()       # obtem as linhas do log em uma lista
+            log_file.close()                 # Fecha o arquivo de log
+        except Exception as e:
+            print("ERRO: Houve um erro na leitura do arquivo de configuracoes.")
+            print("")
+            print(e)
+            print("")
+            return "O arquivo de log nao pode ser lido."
+        else:
+            # obtem apenas as linhas que ainda nao foram lidas
+            log = log[self.log_readed_lines:]
 
-        # Apenas caso a mensagem deva ser enviada
-        if to_send:
-            self.log_readed_lines += len(log)  # atualiza o numero de linhas lidas
+            # Apenas caso a mensagem deva ser enviada
+            if to_send:
+                self.log_readed_lines += len(log)  # atualiza o numero de linhas lidas
 
-        # Monta a mensagem com as novas informacoes do log
-        log_info = ""
-        for line in log:
-            log_info += line
+            # Monta a mensagem com as novas informacoes do log
+            log_info = ""
+            for line in log:
+                log_info += line
 
-        # Retorna a mensagem
-        return log_info
+            # Retorna a mensagem
+            return log_info
+
 
 
     def __finish_checker(self):
@@ -95,20 +109,3 @@ class LogMonitor(object):
     def is_finished(self):
         """"""
         return self.finished
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
